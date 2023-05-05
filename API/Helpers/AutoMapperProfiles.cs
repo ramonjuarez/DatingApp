@@ -14,7 +14,7 @@ namespace API.Helpers
                             .MapFrom(src=> src.Photos
                             .FirstOrDefault(f=>f.IsMain).Url)
                 )
-                .ForMember(dest => dest.PhotoUrl, opt => opt
+                .ForMember(dest => dest.Age, opt => opt
                             .MapFrom(src=> src.DateOfBirth.CalculateAge())
                 )
            ;
