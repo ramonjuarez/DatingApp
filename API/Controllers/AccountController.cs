@@ -49,7 +49,9 @@ namespace API.Controllers
         [HttpPost("login")]
         public async Task<ActionResult<UserDTO>> Login (LoginDTO login)
         {
-            var user = await this.context.Users.FirstOrDefaultAsync(f=>f.UserName == login.Username.ToLower());
+            var user = await this.context.Users
+                .Include(p=>p.Photos)
+                .SingleOrDefaultAsync(s => s.UserName == login.Username.ToLower());
             return IsValidPasswordForLogin(user, login);
         }
 
@@ -67,7 +69,8 @@ namespace API.Controllers
             }
             return new UserDTO(){
               Username = appUser.UserName,
-              token = TokenService.CreateToken(appUser)  
+              token = TokenService.CreateToken(appUser),
+              PhotoUrl = appUser.Photos.FirstOrDefault(f=> f.IsMain)?.Url
             };
         }
     }
